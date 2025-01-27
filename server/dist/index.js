@@ -42,7 +42,14 @@ const templateModel = genAI.getGenerativeModel({
 });
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: "*",
+}));
+app.use((req, res, next) => {
+    res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+    res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+    next();
+});
 app.post("/template", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const prompt = req.body.prompt;
     const result = yield templateModel.generateContent({
@@ -120,6 +127,9 @@ app.post("/chat", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     res.status(200).json({ response: responseText });
 }));
+app.get("/health", (req, res) => {
+    res.status(200).json({ message: "Server is up and running" });
+});
 app.listen(8000, () => {
     console.log("Server is running on port 8000");
 });
