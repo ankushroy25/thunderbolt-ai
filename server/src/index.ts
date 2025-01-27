@@ -30,6 +30,13 @@ app.use(
     origin: "*",
   })
 );
+
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+});
+
 app.post("/template", async (req, res) => {
   const prompt = req.body.prompt;
 
