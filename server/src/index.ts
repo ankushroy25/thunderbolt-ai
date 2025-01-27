@@ -25,7 +25,11 @@ const templateModel = genAI.getGenerativeModel({
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.post("/template", async (req, res) => {
   const prompt = req.body.prompt;
 
@@ -94,6 +98,9 @@ app.post("/chat", async (req, res) => {
   res.status(200).json({ response: responseText });
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ message: "Server is up and running" });
+});
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 });
