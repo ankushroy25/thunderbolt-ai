@@ -4,7 +4,7 @@ Thunder.bolt is an Ai website that lets you create other websites/projects using
 
 ## Workflow
 
-![](https://github.com/ankushroy25/thunderbolt-ai/blob/main/preview/Architecture.png)
+![](https://github.com/ankushroy25/thunderbolt-ai/blob/main/Architecture.png)
 
 ## Installation
 
@@ -35,6 +35,30 @@ npm install
 #Start the server
 npm run dev
 ```
+
+## API Reference
+
+#### Decide the satrter template for the project
+
+```http
+  POST /template
+```
+
+| Parameter | Type     | Description                                            |
+| :-------- | :------- | :----------------------------------------------------- |
+| `prompt`  | `string` | **Required**. First prompt of what user wants to build |
+
+#### Get the updated files and codes from LLM
+
+```http
+  POST /chat
+```
+
+| Parameter | Type     | Description                                             |
+| :-------- | :------- | :------------------------------------------------------ |
+| `prompt`  | `string` | **Required**. Follow up prompts inside the builder page |
+
+### Author
 
 Ankush Roy  
 Email - imankushroy@gmail.com
