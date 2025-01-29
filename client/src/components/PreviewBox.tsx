@@ -2,39 +2,48 @@ import { WebContainer } from "@webcontainer/api";
 import { useEffect, useState } from "react";
 
 interface PreviewBoxProps {
-  files: any[];
   webContainer: WebContainer;
 }
-const PreviewBox = ({ files, webContainer }: PreviewBoxProps) => {
+const PreviewBox = ({ webContainer }: PreviewBoxProps) => {
   const [url, setUrl] = useState<string | null>(null);
 
-  async function main() {
-    const installProcess = await webContainer?.spawn("npm", ["install"], {
-      cwd: "/project",
-    });
-    installProcess?.output.pipeTo(
-      new WritableStream({
-        write(data) {
-          console.log(data);
-        },
-      })
-    );
-    // const rootFiles = await webContainer?.fs.readdir("/project");
-    // console.log("Root directory files:", rootFiles);
-    await webContainer?.spawn("npm", ["run", "dev"], {
-      cwd: "/project",
-    });
-    // Wait for `server-ready` event
-    webContainer?.on("server-ready", (port, url) => {
-      console.log(port);
-      console.log(url);
-      setUrl(url);
-    });
-  }
-
   useEffect(() => {
+    async function main() {
+      const installProcess = await webContainer?.spawn("npm", ["install"], {
+        cwd: "/project",
+      });
+      installProcess?.output.pipeTo(
+        new WritableStream({
+          write(data) {
+            console.log(data);
+          },
+        })
+      );
+      await installProcess.exit; // Wait for install to finish
+
+      // const rootFiles = await webContainer?.fs.readdir("/project");
+      // console.log("Root directory files:", rootFiles);
+      const startProcess = await webContainer?.spawn("npm", ["run", "dev"], {
+        cwd: "/project",
+      });
+
+      startProcess?.output.pipeTo(
+        new WritableStream({
+          write(data) {
+            console.log(data);
+          },
+        })
+      );
+      // Wait for `server-ready` event
+      webContainer?.on("server-ready", (port, url) => {
+        console.log(port);
+        console.log(url);
+        setUrl(url);
+      });
+    }
+
     main();
-  }, []);
+  }, [webContainer]);
 
   return (
     <div className="h-full flex items-center justify-center">

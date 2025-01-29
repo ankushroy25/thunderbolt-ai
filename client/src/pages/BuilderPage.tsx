@@ -17,7 +17,6 @@ import { API_URL } from "../config";
 import { parseChatResponseToSteps, parseStepsFromInput, Step } from "../steps";
 import PreviewBox from "../components/PreviewBox";
 import { useWebContainer } from "../hooks/useWebContainer";
-import Loader from "../components/Loader";
 
 interface FileStructure {
   name: string;
@@ -509,7 +508,7 @@ export default function BuilderPage() {
                 value={getFileContentByPath(files, selectedFile) || ""}
               />
             ) : activeTab === "preview" ? (
-              <PreviewBox files={files} webContainer={webcontainer} />
+              <PreviewBox webContainer={webcontainer} />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
                 Select a file to edit
